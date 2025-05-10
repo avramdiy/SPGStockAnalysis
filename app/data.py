@@ -14,7 +14,7 @@ def display_dataframe():
         # Read the file, treating the first row as headers
         df = pd.read_csv(file_path, delimiter=",", header=0)
 
-        # Drop the "OpenInt" column
+        # Drop the "OpenInt" column if it exists
         if "OpenInt" in df.columns:
             df = df.drop(columns=["OpenInt"])
 
@@ -35,7 +35,7 @@ def display_dataframe():
             <div class="container mt-5">
                 <h1 class="mb-4">DataFrame from File</h1>
                 {{ table | safe }}
-                <p><a href="/plot" class="btn btn-primary mt-3">View Plot of Average Open Prices (2005-2017)</a></p>
+                <p><a href="/plot" class="btn btn-primary mt-3">View Plot of Average Prices (2005-2017)</a></p>
             </div>
         </body>
         </html>
@@ -46,7 +46,7 @@ def display_dataframe():
 
 
 @app.route('/plot')
-def plot_average_open():
+def plot_average_prices():
     # File path
     file_path = r"C:\Users\avram\OneDrive\Desktop\TRG Week 23\spg.us.txt"
 
@@ -61,16 +61,25 @@ def plot_average_open():
         # Filter for years 2005 to 2017
         df_filtered = df[(df["Year"] >= 2005) & (df["Year"] <= 2017)]
 
-        # Calculate average "Open" price by year
+        # Calculate average "Open" and "Close" prices by year
         avg_open_by_year = df_filtered.groupby("Year")["Open"].mean()
+        avg_close_by_year = df_filtered.groupby("Year")["Close"].mean()
+
+        # Calculate the median of the yearly average Open and Close prices
+        yearly_median_price = (avg_open_by_year + avg_close_by_year) / 2
 
         # Plot the data
         plt.figure(figsize=(10, 6))
-        avg_open_by_year.plot(kind="bar", color="skyblue")
-        plt.title("Average Open Prices (2005-2017)", fontsize=16)
+
+        # Plot "Yearly Median Average Price" as a blue line
+        plt.plot(yearly_median_price.index, yearly_median_price.values, color="blue", linewidth=2, label="Median Avg Price", marker='o')
+
+        # Add titles and labels
+        plt.title("Yearly Median Prices (2005-2017)", fontsize=16)
         plt.xlabel("Year", fontsize=14)
-        plt.ylabel("Average Open Price", fontsize=14)
+        plt.ylabel("Price", fontsize=14)
         plt.xticks(rotation=45, fontsize=12)
+        plt.legend()
         plt.grid(axis="y", linestyle="--", alpha=0.7)
 
         # Save plot to a BytesIO buffer

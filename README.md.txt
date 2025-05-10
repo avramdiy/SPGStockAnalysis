@@ -26,4 +26,10 @@
 
 ### 4th Commit
 
+- While keeping the same plot and visualization, I want to visualize the same range of years, showing the yearly average "Close" price as a transparent red. I also want to change the color of the "Open" price visualization to green.
+
+- The bar chart overlay is a poor way of communicating data. I will make both charts line plots.
+
+- Turns out the prices of Open and Close are almost the same. I will combine the data from the average Open and Close yearly data to create a Yearly Median Average Price Plot in blue. I want to show a legend in the same chart, showing the prices for the yearly average Open and Close prices, so in-depth analysis correlates to the newly constructed line.
+
 ### 5th Commit
