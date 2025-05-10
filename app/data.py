@@ -93,6 +93,59 @@ def plot_average_prices():
         return Response(buf, mimetype="image/png")
     except Exception as e:
         return f"Error generating plot: {str(e)}"
+    
+@app.route('/monthly_plot')
+def plot_monthly_averages():
+    # File path
+    file_path = r"C:\Users\avram\OneDrive\Desktop\TRG Week 23\spg.us.txt"
+
+    try:
+        # Read the file
+        df = pd.read_csv(file_path, delimiter=",", header=0)
+
+        # Convert "Date" to datetime and extract year and month
+        df["Date"] = pd.to_datetime(df["Date"])
+        df["Year"] = df["Date"].dt.year
+        df["Month"] = df["Date"].dt.month
+
+        # Filter data for 2008 and 2016
+        df_filtered = df[df["Year"].isin([2008, 2016])]
+
+        # Calculate the monthly average close price for 2008
+        avg_close_2008 = df_filtered[df_filtered["Year"] == 2008].groupby("Month")["Close"].mean()
+
+        # Calculate the monthly average close price for 2016
+        avg_close_2016 = df_filtered[df_filtered["Year"] == 2016].groupby("Month")["Close"].mean()
+
+        # Plot the data
+        plt.figure(figsize=(10, 6))
+
+        # Plot 2008 data as a red line
+        plt.plot(avg_close_2008.index, avg_close_2008.values, color="red", linewidth=2, label="2008 Avg Close Price", marker='o')
+
+        # Plot 2016 data as a blue line
+        plt.plot(avg_close_2016.index, avg_close_2016.values, color="blue", linewidth=2, label="2016 Avg Close Price", marker='o')
+
+        # Add titles and labels
+        plt.title("Monthly Average Close Prices (2008 vs 2016)", fontsize=16)
+        plt.xlabel("Month", fontsize=14)
+        plt.ylabel("Close Price", fontsize=14)
+        plt.xticks(ticks=range(1, 13), labels=["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"], fontsize=12)
+        plt.legend()
+        plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+        # Save plot to a BytesIO buffer
+        buf = io.BytesIO()
+        plt.tight_layout()
+        plt.savefig(buf, format="png")
+        buf.seek(0)
+        plt.close()
+
+        # Return the plot as a response
+        return Response(buf, mimetype="image/png")
+    except Exception as e:
+        return f"Error generating plot: {str(e)}"
+    
 
 if __name__ == '__main__':
     app.run(debug=True)

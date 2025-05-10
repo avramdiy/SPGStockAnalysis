@@ -33,3 +33,13 @@
 - Turns out the prices of Open and Close are almost the same. I will combine the data from the average Open and Close yearly data to create a Yearly Median Average Price Plot in blue. I want to show a legend in the same chart, showing the prices for the yearly average Open and Close prices, so in-depth analysis correlates to the newly constructed line.
 
 ### 5th Commit
+
+- From the last visualization, I can see a decline in price average from the years 2008 - 2009, and the years 2016 - 2017.
+
+- I will create a new route and plot that charts the monthly average close price for the years of 2008 and 2016.
+
+- The X axis will show all months from January to December. The Y-axis will show the price points.
+
+- The 2008 data will be plotted as a red line, while the 2016 data will be plotted as a blue line on the same chart.
+
+- You can see a clear price drop in September to the end of 2008 or the end of 2016.
