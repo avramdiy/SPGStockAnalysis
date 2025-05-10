@@ -1,5 +1,7 @@
-from flask import Flask, render_template_string
+from flask import Flask, render_template_string, Response
 import pandas as pd
+import matplotlib.pyplot as plt
+import io
 
 app = Flask(__name__)
 
@@ -33,6 +35,7 @@ def display_dataframe():
             <div class="container mt-5">
                 <h1 class="mb-4">DataFrame from File</h1>
                 {{ table | safe }}
+                <p><a href="/plot" class="btn btn-primary mt-3">View Plot of Average Open Prices (2005-2017)</a></p>
             </div>
         </body>
         </html>
@@ -40,6 +43,47 @@ def display_dataframe():
         return render_template_string(html_template, table=html_table)
     except Exception as e:
         return f"Error reading the file: {str(e)}"
+
+
+@app.route('/plot')
+def plot_average_open():
+    # File path
+    file_path = r"C:\Users\avram\OneDrive\Desktop\TRG Week 23\spg.us.txt"
+
+    try:
+        # Read the file
+        df = pd.read_csv(file_path, delimiter=",", header=0)
+
+        # Convert "Date" to datetime and extract year
+        df["Date"] = pd.to_datetime(df["Date"])
+        df["Year"] = df["Date"].dt.year
+
+        # Filter for years 2005 to 2017
+        df_filtered = df[(df["Year"] >= 2005) & (df["Year"] <= 2017)]
+
+        # Calculate average "Open" price by year
+        avg_open_by_year = df_filtered.groupby("Year")["Open"].mean()
+
+        # Plot the data
+        plt.figure(figsize=(10, 6))
+        avg_open_by_year.plot(kind="bar", color="skyblue")
+        plt.title("Average Open Prices (2005-2017)", fontsize=16)
+        plt.xlabel("Year", fontsize=14)
+        plt.ylabel("Average Open Price", fontsize=14)
+        plt.xticks(rotation=45, fontsize=12)
+        plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+        # Save plot to a BytesIO buffer
+        buf = io.BytesIO()
+        plt.tight_layout()
+        plt.savefig(buf, format="png")
+        buf.seek(0)
+        plt.close()
+
+        # Return the plot as a response
+        return Response(buf, mimetype="image/png")
+    except Exception as e:
+        return f"Error generating plot: {str(e)}"
 
 if __name__ == '__main__':
     app.run(debug=True)

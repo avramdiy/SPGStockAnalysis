@@ -18,7 +18,11 @@
 
 - Adjust DF to show organized columns with the correct header names of "Date" "Open" "High" "Low" "Close" "Volume" "OpenInt"
 
+- Drop the "OpenInt" column
+
 ### 3rd Commit
+
+- While keeping the current script, I want to visualize a new route and plot, that shows the average "Open" price for the years 2005 to 2017. The Y-axis should indicate the price, and the X-axis should indicate each year.
 
 ### 4th Commit
 
