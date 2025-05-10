@@ -9,8 +9,12 @@ def display_dataframe():
     file_path = r"C:\Users\avram\OneDrive\Desktop\TRG Week 23\spg.us.txt"
 
     try:
-        # Read the file into a DataFrame
-        df = pd.read_csv(file_path, delimiter="\t")  # Update delimiter if not tab-separated
+        # Read the file, treating the first row as headers
+        df = pd.read_csv(file_path, delimiter=",", header=0)
+
+        # Drop the "OpenInt" column
+        if "OpenInt" in df.columns:
+            df = df.drop(columns=["OpenInt"])
 
         # Convert DataFrame to HTML
         html_table = df.to_html(classes="table table-striped", index=False)

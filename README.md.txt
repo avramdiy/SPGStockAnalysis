@@ -16,6 +16,8 @@
 
 ### 2nd Commit
 
+- Adjust DF to show organized columns with the correct header names of "Date" "Open" "High" "Low" "Close" "Volume" "OpenInt"
+
 ### 3rd Commit
 
 ### 4th Commit
